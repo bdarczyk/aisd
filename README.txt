@@ -1,8 +1,8 @@
 Program do kompresji plików (Metoda Huffmana)
 Jak uruchomić program?
-Program jest napisany w języku C. Aby go uruchomić, musisz go najpierw skompilować.
+Program jest napisany w języku C. Aby go uruchomić, trzeba go najpierws skompilować.
 
-Krok 1: Kompilacja Otwórz terminal (konsolę) w folderze z plikiem main.c i wpisz:
+Krok 1: Kompilacja Otwórz terminal w folderze z plikiem main.c i wpisz:
 
 gcc main.c -o huffman
 
