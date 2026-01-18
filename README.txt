@@ -1,17 +1,31 @@
-NSTRUKCJA UŻYTKOWNIKA - PROGRAM HUFFMAN
+Program do kompresji plików (Metoda Huffmana)
+Jak uruchomić program?
+Program jest napisany w języku C. Aby go uruchomić, musisz go najpierw skompilować.
 
-    Opis: Program służy do bezstratnej kompresji plików tekstowych metodą Huffmana. Wykorzystuje własną implementację kolejki priorytetowej.
+Krok 1: Kompilacja Otwórz terminal (konsolę) w folderze z plikiem main.c i wpisz:
 
-    Kompilacja: Program napisany w języku C. Należy go skompilować np. poleceniem: gcc main.c -o huffman
+gcc main.c -o huffman
 
-    Uruchomienie: Uruchom plik wykonywalny w konsoli.
+Krok 2: Uruchomienie Wpisz w konsoli:
 
-    Menu:
+    Windows: huffman.exe
 
-        Kompresja: Podaj nazwę pliku źródłowego (np. tekst.txt) i docelowego (np. wynik.bin). Program stworzy skompresowany plik.
+    Linux/Mac: ./huffman
 
-        Dekompresja: Podaj nazwę pliku skompresowanego i nazwę dla pliku wynikowego.
+MENU:
 
+Opcja 1: Kompresja
+    Wybierz opcję 1.
 
+    Program zapyta o plik wejściowy: Podaj nazwę pliku (np. test.txt).
 
-    Autor: Błażej Darczyk
+    Program zapyta o plik wyjściowy: Podaj nazwe pliku (np. wynik.bin).
+
+Opcja 2: Dekompresja
+    Wybierz opcję 2.
+
+    Podaj nazwę pliku skompresowanego (np. wynik.bin).
+
+    Podaj nazwę pliku, pod jaką zapisać odzyskany tekst (np. odzyskany.txt).
+
+Autor: Błażej Darczyk

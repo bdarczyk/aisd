@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// --- DEFINICJE I STRUKTURY ---
 
 // Struktura reprezentujaca wezel w drzewie Huffmana
 typedef struct element_drzewa {
@@ -15,7 +14,7 @@ typedef struct element_drzewa {
 // kolejka priorytetowa zaimplementowana jako kopiec
 typedef struct {
     int rozmiar_aktualny;
-    element_t **tablica_wskaznikow; // dynamiczna tablica wskaznikow
+    element_t **tablica_wskaznikow;
 } priorytetowa_kolejka_t;
 
 
@@ -64,7 +63,7 @@ void sortuj_w_dol(priorytetowa_kolejka_t *k, int index) {
             zamien_miejscami(&k->tablica_wskaznikow[index], &k->tablica_wskaznikow[najmniejszy]);
             index = najmniejszy;
         } else {
-            break; // Kopiec jest juz poprawny
+            break;
         }
     }
 }
@@ -73,7 +72,6 @@ void sortuj_w_dol(priorytetowa_kolejka_t *k, int index) {
 void sortuj_w_gore(priorytetowa_kolejka_t *k, int index) {
     while (index > 0) {
         int rodzic = (index - 1) / 2;
-        // Jesli rodzic ma wieksza wage niz my, to zamieniamy sie miejscami
         if (k->tablica_wskaznikow[rodzic]->czestosc > k->tablica_wskaznikow[index]->czestosc) {
             zamien_miejscami(&k->tablica_wskaznikow[index], &k->tablica_wskaznikow[rodzic]);
             index = rodzic;
@@ -109,7 +107,6 @@ void aktualizuj_wage(priorytetowa_kolejka_t *k, char znak, int nowa_waga) {
             int stara_waga = k->tablica_wskaznikow[i]->czestosc;
             k->tablica_wskaznikow[i]->czestosc = nowa_waga;
 
-            // Decyzja czy naprawiac w gore czy w dol
             if (nowa_waga < stara_waga) sortuj_w_gore(k, i);
             else sortuj_w_dol(k, i);
             return;
@@ -125,30 +122,25 @@ void inicjalizuj_kolejke(priorytetowa_kolejka_t *k, char *znaki, int *wagi, int 
     }
     k->rozmiar_aktualny = n;
 
-    // Budowanie kopca - zaczynam od polowy tablicy idac w dol
     for (int i = (n / 2) - 1; i >= 0; i--) {
         sortuj_w_dol(k, i);
     }
 }
 
-
 // generowanie kodow binarnych dla lisci
 void rekurencyjne_szukanie_kodow(element_t *wezel, char *obecny_kod, int dlugosc, char mapa_kodow[256][256]) {
-    // Idziemy w lewo - dopisujemy '0'
     if (wezel->syn0) {
         obecny_kod[dlugosc] = '0';
         obecny_kod[dlugosc + 1] = '\0';
         rekurencyjne_szukanie_kodow(wezel->syn0, obecny_kod, dlugosc + 1, mapa_kodow);
     }
 
-    // Idziemy w prawo - dopisujemy '1'
     if (wezel->syn1) {
         obecny_kod[dlugosc] = '1';
         obecny_kod[dlugosc + 1] = '\0';
         rekurencyjne_szukanie_kodow(wezel->syn1, obecny_kod, dlugosc + 1, mapa_kodow);
     }
 
-    // Jestesmy w lisciu - zapisujemy znaleziony kod dla znaku
     if (!wezel->syn0 && !wezel->syn1) {
         strcpy(mapa_kodow[(unsigned char)wezel->litera], obecny_kod);
     }
@@ -162,7 +154,6 @@ void wykonaj_kompresje(char *nazwa_we, char *nazwa_wy) {
         return;
     }
 
-    // Zliczam ile razy wystepuje kazdy znak
     int histogram[256] = {0};
     int c;
     long licznik_znakow = 0;
@@ -171,14 +162,13 @@ void wykonaj_kompresje(char *nazwa_we, char *nazwa_wy) {
         histogram[c]++;
         licznik_znakow++;
     }
-    rewind(plik_we); // Wracam na poczatek pliku
+    rewind(plik_we);
 
     if (licznik_znakow == 0) {
         fclose(plik_we);
         return;
     }
 
-    // Inicjalizuje kolejke i dodaje znaki
     priorytetowa_kolejka_t kolejka;
     kolejka.tablica_wskaznikow = malloc(256 * sizeof(element_t*));
     kolejka.rozmiar_aktualny = 0;
@@ -196,7 +186,6 @@ void wykonaj_kompresje(char *nazwa_we, char *nazwa_wy) {
         element_t *e1 = pobierz_minimum(&kolejka);
         element_t *e2 = pobierz_minimum(&kolejka);
 
-        // Nowy wezel ma wage rowna sumie dzieci
         element_t *rodzic = utworz_element(0, e1->czestosc + e2->czestosc);
         rodzic->syn0 = e1;
         rodzic->syn1 = e2;
@@ -216,9 +205,7 @@ void wykonaj_kompresje(char *nazwa_we, char *nazwa_wy) {
     // Zapisuje plik wynikowy
     FILE *plik_wy = fopen(nazwa_wy, "wb");
 
-    // Zapisuje ilosc wpisow w slowniku
     fwrite(&unikalne_znaki, sizeof(int), 1, plik_wy);
-    // Zapisuje pary: znak -> waga
     for (int i = 0; i < 256; i++) {
         if (histogram[i] > 0) {
             char znak = (char)i;
@@ -226,10 +213,8 @@ void wykonaj_kompresje(char *nazwa_we, char *nazwa_wy) {
             fwrite(&histogram[i], sizeof(int), 1, plik_wy);
         }
     }
-    // Zapisuje calkowita dlugosc oryginalnego pliku
     fwrite(&licznik_znakow, sizeof(long), 1, plik_wy);
 
-    // ompresja wlasciwa (pakowanie bitow)
     unsigned char bajt_wyjsciowy = 0;
     int przesuniecie = 0;
 
@@ -329,7 +314,6 @@ void wykonaj_dekompresje(char *nazwa_we, char *nazwa_wy) {
     printf("Zakonczono dekompresje -> %s\n", nazwa_wy);
 }
 
-
 int main() {
     char sciezka_we[100];
     char sciezka_wy[100];
@@ -357,6 +341,5 @@ int main() {
             printf("Zla opcja.\n");
         }
     }
-
     return 0;
 }
