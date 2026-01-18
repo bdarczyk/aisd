@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 // Struktura reprezentujaca wezel w drzewie Huffmana
 typedef struct element_drzewa {
     char litera;
@@ -20,7 +19,7 @@ typedef struct {
 
 // Funkcja tworzaca nowy element drzewa
 element_t* utworz_element(char znak, int waga) {
-    element_t* nowy = (element_t*)malloc(sizeof(element_t));
+    element_t* nowy = malloc(sizeof(element_t));
     if (!nowy) return NULL;
 
     // wartosci poczatkowe
@@ -30,7 +29,6 @@ element_t* utworz_element(char znak, int waga) {
     nowy->syn1 = NULL;
     return nowy;
 }
-
 
 // Pomocnicza funkcja do zamiany elementow w tablicy
 void zamien_miejscami(element_t **a, element_t **b) {
@@ -221,10 +219,9 @@ void wykonaj_kompresje(char *nazwa_we, char *nazwa_wy) {
     while ((c = fgetc(plik_we)) != EOF) {
         char *kod = slownik[c];
         for (int i = 0; kod[i] != '\0'; i++) {
-            // Przesuwam bity w lewo
             bajt_wyjsciowy = bajt_wyjsciowy << 1;
             if (kod[i] == '1') {
-                bajt_wyjsciowy = bajt_wyjsciowy | 1; // Ustawiam bit na 1
+                bajt_wyjsciowy = bajt_wyjsciowy | 1;
             }
             przesuniecie++;
 
@@ -297,8 +294,8 @@ void wykonaj_dekompresje(char *nazwa_we, char *nazwa_wy) {
 
             int bit = (bajt >> i) & 1;
 
-            if (bit == 0) obecny = obecny->syn0; // Ide w lewo
-            else obecny = obecny->syn1;          // Ide w prawo
+            if (bit == 0) obecny = obecny->syn0; //
+            else obecny = obecny->syn1;
 
             if (obecny->syn0 == NULL && obecny->syn1 == NULL) {
                 fputc(obecny->litera, plik_wy);
